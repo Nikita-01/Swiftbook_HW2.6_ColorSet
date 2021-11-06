@@ -82,19 +82,6 @@ class SettingsViewController: UIViewController {
         )
     }
     
-    private func setValue(for labels: UILabel...) {
-        labels.forEach { label in
-            switch label {
-            case redLabel:
-                redLabel.text = string(from: redSlider)
-            case greenLabel:
-                greenLabel.text = string(from: greenSlider)
-            default:
-                blueLabel.text = string(from: blueSlider)
-            }
-        }
-    }
-    
     private func string(from slider: UISlider) -> String {
         String(format: "%.2f", slider.value)
     }
@@ -119,13 +106,13 @@ extension SettingsViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         guard let textFieldValue = Float(textField.text!) else {
-            do {showAlert(title: "Value is empty",
+            do { showAlert(title: "Value is empty",
                           message: "Please enter the value",
-                          textField: nil); return }}
+                           textField: textField); return }}
         guard textFieldValue >= 0 && textFieldValue <= 1 else {
-            do {showAlert(title: "Value is not correct",
+            do { showAlert(title: "Value is not correct",
                           message: "Please, enter correct value",
-                          textField: nil); return }}
+                          textField: textField); return }}
         switch textField {
         case redTF:
             redLabel.text = textField.text
@@ -142,10 +129,11 @@ extension SettingsViewController: UITextFieldDelegate {
 }
 
 extension SettingsViewController {
-    private func showAlert(title: String, message: String, textField: UITextField? = nil) {
+    private func showAlert(title: String, message: String, textField: UITextField) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-            textField?.text = ""
+            textField.text = "-"
+            
         }
         alert.addAction(okAction)
         present(alert, animated: true)
